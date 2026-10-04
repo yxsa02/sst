@@ -10,7 +10,8 @@ from lib.api import setApi
 class App:
     def __init__(self) -> None:
         self.config = loadConfig()
-        self.path = os.path.abspath(self.config.get("path", os.getcwd()))
+        self.path:str = os.path.abspath(self.config.get("path", os.getcwd()))
+        self.rootPath:str = self.path
         self.fApp = Flask(__name__)
         self.port = self.config.get("port", 5000)
         self.host = self.config.get("host", "0.0.0.0")

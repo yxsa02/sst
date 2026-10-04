@@ -18,7 +18,7 @@ const get = {
                 return { path: '', files: [] };
             });
     },
-    // 获取文件内容
+    // 获取文件内容（文本）
     "fileContent": function (filename) {
         return fetch(`/api/file/?fn=${encodeURIComponent(filename)}`)
             .then(response => {
@@ -38,27 +38,25 @@ const get = {
     },
     // 获取文件URL（用于预览图片/音频/视频）
     "getFileUrl": function (filename) {
-        return `/api/file/${encodeURIComponent(filename)}`;
+        return `/api/file/?fn=${encodeURIComponent(filename)}`;
     },
     // 删除文件
     "deleteFile": function (filename) {
         if (!confirm(`确定要删除文件 "${filename}" 吗？`)) {
-            return Promise.reject('用户取消删除');
+            return Promise.resolve(null);   // 用户取消，不抛异常
         }
-        
+
         return fetch(`/api/delete/${encodeURIComponent(filename)}`, {
             method: 'DELETE'
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`文件 ${filename} 删除失败 (${response.status})`);
-                }
-                return response.text();
-            })
+            .then(response => response.json())
             .then(result => {
                 console.log('删除结果:', result);
-                // 删除成功后刷新列表
-                return result;
+                if (result && result.status === 's') {
+                    return result;
+                }
+                // 后端返回业务错误
+                throw new Error((result && result.msg) || '删除失败');
             })
             .catch(error => {
                 console.error('删除文件失败:', error);
@@ -71,16 +69,13 @@ const get = {
         return fetch(`/api/cd/?path=${encodeURIComponent(dirname)}`, {
             method: 'POST'
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`切换目录失败 (${response.status})`);
-                }
-                return response.text();
-            })
+            .then(response => response.json())
             .then(result => {
                 console.log('切换目录结果:', result);
-                // 切换成功后刷新列表
-                return result;
+                if (result && result.status === 's') {
+                    return result;
+                }
+                throw new Error((result && result.msg) || '切换目录失败');
             })
             .catch(error => {
                 console.error('切换目录失败:', error);
@@ -92,36 +87,33 @@ const get = {
     "makeDirectory": function (dirname) {
         if (!dirname || dirname.trim() === '') {
             alert('请输入目录名称');
-            return Promise.reject('目录名称为空');
+            return Promise.resolve(null);   // 用户未输入，不抛异常
         }
-        
+
         return fetch(`/api/mkdir/${encodeURIComponent(dirname.trim())}`, {
             method: 'POST'
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`创建目录失败 (${response.status})`);
-                }
-                return response.text();
-            })
+            .then(response => response.json())
             .then(result => {
                 console.log('创建目录结果:', result);
-                alert(result);
-                // 创建成功后刷新列表
-                return result;
+                if (result && result.status === 's') {
+                    alert(result.msg || '目录创建成功');
+                    return result;
+                }
+                throw new Error((result && result.msg) || '创建目录失败');
             })
             .catch(error => {
                 console.error('创建目录失败:', error);
                 alert(`创建目录失败: ${error.message}`);
                 return null;
             });
-    }, 
+    },
     // 关闭服务器
     "exitServer": function () {
         if (!confirm('确定要关闭服务器吗？')) {
-            return Promise.reject('用户取消关闭');
+            return Promise.resolve(null);   // 用户取消，不抛异常
         }
-        
+
         return fetch('/api/exit', {
             method: 'POST'
         })

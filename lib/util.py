@@ -1,3 +1,5 @@
+import os
+
 fe = ['.txt', '.md', '.py', '.json', '.csv', '.log', '.xml', '.html', '.js', '.css', '.ini', '.cfg', '.conf', '.bat', '.sh', '.yml', '.yaml']
 fbe = ['.exe', '.dll', '.so', '.bin', '.dat', '.img', '.iso', '.zip', '.tar', '.gz', '.7z', '.rar']
 fme = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.tiff', '.ico', '.svg', '.mp3', '.wav', '.ogg', '.flac', '.mp4', '.avi', '.mkv', '.mov']
@@ -20,3 +22,16 @@ def loadConfig():
     except Exception as e:
         print(f"Error reading config: {e}")
     return config
+
+def safe_join(root, filename):
+    if not filename:
+        return None
+    if os.path.isabs(filename) or filename.startswith(("/", "\\")):
+        return None
+    full = os.path.abspath(os.path.join(root, filename))
+    try:
+        if os.path.commonpath([os.path.abspath(root), full]) != os.path.abspath(root):
+            return None
+    except ValueError:
+        return None
+    return full
