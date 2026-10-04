@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html style="height: 100%;overflow: hidden;">
+    <head>
+        <title>WPFM</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="./src/0.css">
+    </head>
+    <body style="height: 100%;margin: 0;">
+        <div class="boxa" style="display: flex; width: 100%;height: 20%;background-color: aqua;">
+            <div><img src="./res/icon.png" height="100%"></div>
+            <div style="display: flex; flex-direction: column; height: 100%;width: 100%;">
+                <div style="flex: 1; align-self: center;"><h1>WPFM</h1></div>
+                <div style="display: flex;width: 100%;height: 25px;">
+                    <button id="exitBtn">退出</button>
+                    <button id="pathLast">上一级</button>
+                    <div id="pathShow" style="font-size: 20px;">A:\1\2\3</div>
+                </div>
+            </div>
+        </div>
+        <div style="display: flex;height: 80%;">
+            <div id="leftBar" class="boxa" style="width: 70%;background-color: gray;overflow: scroll;">
+                <div id="fileList" >
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>NO.</td>
+                                <td>Name</td>
+                                <td>Size</td>
+                                <td>Action</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>  
+                </div>
+                <hr>
+                <div>
+                    <button id="pageLast">上一页</button>
+                    第<select id="pageSelect"></select>页
+                    <button id="pageNext">下一页</button>
+                    |共<a id="pageCount"> </a>页|共有<a id="fileCount"> </a>个文件|
+                    <button id="refresh">刷新</button>
+                    <button id="newFolder">新建文件夹</button>
+                    <button id="upload">上传</button>
+                </div>
+            </div>
+            <div id="showBar" class="boxa" style="width: 30%;background-color: blue;"></div>
+        </div>
+        <script src="./src/ui.js"></script>
+        <script src="./src/get.js"></script>
+        <script src="./src/main.js"></script>
+    </body>
+</html>
