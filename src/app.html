@@ -7,18 +7,24 @@
     </head>
     <body>
         <div class="boxa" id="topBar">
-            <div><img src="./res/icon.png" height="100%"></div>
-            <div id="notLconBar">
+            <div id="topBarLeft">
+                <div><img src="./res/icon.png" height="100%"></div>
                 <div id="titleBar">WPFM</div>
-                <div id="pathBar">
-                    <button class="button" id="exitBtn">退出</button>
-                    <button class="button" id="pathLast">上一级</button>
-                    <div id="pathShow"></div>
+            </div>
+            <div id="topBarRight">
+                <div id="userInfo">
+                    <div id="userName"></div>
+                    <button class="button" id="logoutBtn"><img src="/res/signout.svg"></button>
                 </div>
             </div>
         </div>
         <div id="main">
             <div id="leftBar" class="boxa">
+                <div id="pathBar">
+                    <button class="button" id="exitBtn">退出</button>
+                    <button class="button" id="pathLast">上一级</button>
+                    <div id="pathShow"></div>
+                </div>
                 <div id="fileList" >
                     <table>
                         <thead>

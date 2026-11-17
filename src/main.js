@@ -3,7 +3,7 @@
 // 数据存储
 let allData = [];
 let currentPage = 1;
-const itemsPerPage = 8;
+const itemsPerPage = 10;
 let currentPath = '';
 
 // ============ 核心功能 ============

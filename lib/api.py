@@ -3,7 +3,7 @@ from lib.util import *
 import os
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from .. import server
+    from . import server
 
 def setApi(app:"server.App"):
     fApp = app.fApp

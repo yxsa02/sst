@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <style>
+        body {
+            min-width: 500px;
+            min-height: 400px;
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+        }
+
+        .window {
+            /*display: none;*/
+            background-color: grey;
+            width: 25%;
+            height: 85%;
+            position: fixed;
+            /* 设置fixed固定定位 */
+            bottom: 10%;
+            /* 距离浏览器窗口下边框*/
+            right: 5%;
+            /* 距离浏览器窗口右边框*/
+        }
+
+        .item {
+            margin: 8px 0;
+        }
+
+        .registerLable {
+            display: inline-block;
+            width: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div class="window">
+            <div style="display: flex;width: 100%;height: auto;text-align: center;padding-top:20px;padding-bottom: 20px;">
+                <div id="btnToLogin" style="width: 50%;font-size: 100%;color: white;background-color: black;padding-top:10px;padding-bottom:10px;">Login</div>
+                <div id="btnToRegister" style="width: 50%;font-size: 100%;color: white;background-color: gray;padding-top:10px;padding-bottom:10px;">Register</div>
+            </div>
+            <div id="register" style="text-align: center;display: none;padding-top:10px;padding-bottom:10px;">
+                <div class="item">
+                    <label class="registerLable" for="key">Key:</label>
+                    <input type="text" id="key" name="key" required><br>
+                </div>
+                <div class="item">
+                    <label class="registerLable" for="username">Username:</label>
+                    <input type="text" id="Ruid" name="username" required><br>
+                </div>
+                <div class="item">
+                    <label class="registerLable" for="password">Password:</label>
+                    <input type="password" id="Rpwd" name="password" required><br>
+                </div>
+                <button id="btnRegister">Register</button>
+            </div>
+            <div id="login" style="text-align: center;padding-top:10px;padding-bottom:10px;">
+                <div class="item">
+                    <label class="registerLable" for="username">Username:</label>
+                    <input type="text" id="Luid" name="username" required><br>
+                </div>
+                <div class="item">
+                    <label class="registerLable" for="password">Password:</label>
+                    <input type="password" id="Lpwd" name="password" required><br>
+                </div>
+                <button id="btnLogin">Login</button>
+            </div>
+            <div id="msg" style="width: 96%;text-align: center;margin:1%;">Hi</div>
+        </div>
+        <script>
+            // 切换注册和登录窗口
+            var btnToLogin = document.getElementById("btnToLogin");
+            var btnToRegister = document.getElementById("btnToRegister");
+            btnToLogin.addEventListener("click", function () {
+                document.getElementById("register").style.display = "none";
+                document.getElementById("login").style.display = "block";
+                btnToRegister.style.backgroundColor = "grey";
+                btnToLogin.style.backgroundColor = "black";
+            });
+            btnToRegister.addEventListener("click", function () {
+                document.getElementById("login").style.display = "none";
+                document.getElementById("register").style.display = "block";
+                btnToLogin.style.backgroundColor = "grey";
+                btnToRegister.style.backgroundColor = "black";
+            });
+            
+            var msger = document.getElementById("msg");
+            // 注册按钮点击事件
+            document.getElementById("btnRegister").addEventListener("click", function () {
+                var key = document.getElementById("key").value;
+                var id = document.getElementById("Ruid").value;
+                var password = document.getElementById("Rpwd").value;
+                // 发送注册请求
+                fetch("/api/u/register", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ key: key, id: id, pwd: password })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.code === 0) {
+                            msger.innerHTML = "注册成功！";
+                            // 注册成功后切换到登录窗口
+                            document.getElementById("register").style.display = "none";
+                            document.getElementById("login").style.display = "block";
+                            btnToRegister.style.backgroundColor = "grey";
+                            btnToLogin.style.backgroundColor = "black";
+                        } else {
+                            msger.innerHTML = "注册失败：" + data.msg;
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        msger.innerHTML = "注册请求失败，请稍后重试。";
+                    });
+            });
+            // 登录按钮点击事件
+            document.getElementById("btnLogin").addEventListener("click", function () {
+                var id = document.getElementById("Luid").value;
+                var password = document.getElementById("Lpwd").value;
+                // 发送登录请求
+                fetch("/api/u/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ id: id, pwd: password })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.code === 0) {
+                            msger.innerHTML = "登录成功！";
+                            // 登录成功后可以进行页面跳转或其他操作
+                            //new Promise(resolve => setTimeout(resolve, 500));// 延迟500毫秒
+                            window.location.href = "/?p=app";
+                        } else {
+                            msger.innerHTML = "登录失败：" + data.msg;
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        msger.innerHTML = "登录请求失败，请稍后重试。";
+                    });
+            });
+        </script>
+    </div>
+
+</html>
